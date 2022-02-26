@@ -1,19 +1,25 @@
 {
   "name": "populate-env",
   "version": "1.0.0",
-  "description": "",
+  "description": "Populate a given object from process.env with default value and types.",
   "main": "index.js",
   "scripts": {
     "test": "tsc --noEmit",
     "build": "tsc -p ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "env",
+    "environment",
+    "variable",
+    "typescript"
+  ],
+  "author": "Beeno Tung <aabbcc1241@yahoo.com.hk> (https://beeno-tung.surge.sh)",
+  "license": "BSD-2-Clause",
   "devDependencies": {
     "@types/node": "^17.0.21",
     "ts-node": "^10.5.0",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.5"
-  }
+  },
+  "types": "./index.d.ts"
 }
