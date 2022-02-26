@@ -34,3 +34,5 @@ export function populateEnv(
     throw error
   }
 }
+
+export default populateEnv

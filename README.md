@@ -6,7 +6,42 @@ Populate a given object from process.env with default value and types.
 
 ## Usage Example
 
+```typescript
+// using named import
+import { populateEnv } from 'populate-env'
+
+// or using default import
+// import populateEnv from 'populate-env'
+
+// with auto inferred type
+export let env = {
+  JWT_SECRET: '', // mandatory string variable
+  HOST: '0.0.0.0', // optional string variable
+  VERSION: 0, // mandatory numeric variable
+  PORT: 8100, // optional numeric variable
+  SOME_MORE_VAR: '',
+}
+
+populateEnv(env) // will throw error if missed
+
+populateEnv(env, 'halt') // halt with clear error message
+// print to stderr: "Missing JWT_SECRET, SOME_MORE_VAR in env"
+// then halt with process.exit(1)
+```
+
 ## Typescript Signature
+
+```typescript
+export default populateEnv
+export function populateEnv(
+  env: Record<string, string | number>,
+  mode?: 'halt',
+): void
+
+export class EnvError extends Error {
+  missingNames: string[]
+}
+```
 
 ## License
 

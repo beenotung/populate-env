@@ -17,7 +17,7 @@
     "index.d.ts"
   ],
   "scripts": {
-    "test": "tsc --noEmit",
+    "test": "JWT_SECRET=1 SOME_MORE_VAR=2 ts-node test.ts",
     "build": "tsc -p ."
   },
   "devDependencies": {
