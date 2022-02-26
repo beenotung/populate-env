@@ -10,6 +10,14 @@
   ],
   "author": "Beeno Tung <aabbcc1241@yahoo.com.hk> (https://beeno-tung.surge.sh)",
   "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beenotung/populate-env.git"
+  },
+  "homepage": "https://github.com/beenotung/populate-env#readme",
+  "bugs": {
+    "url": "https://github.com/beenotung/populate-env/issues"
+  },
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
