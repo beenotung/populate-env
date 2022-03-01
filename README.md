@@ -26,7 +26,7 @@ populateEnv(env) // will throw error if missed
 
 populateEnv(env, 'halt') // halt with clear error message
 // print to stderr: "Missing JWT_SECRET, SOME_MORE_VAR in env"
-// then halt with process.exit(1)
+// then auto halt with process.exit(1)
 ```
 
 ## Typescript Signature
