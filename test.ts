@@ -8,4 +8,4 @@ let env = {
   SOME_MORE_VAR: '',
 }
 
-populateEnv(env, 'halt')
+populateEnv(env, { mode: 'halt' })

@@ -4,14 +4,20 @@ export class EnvError extends Error {
   }
 }
 
+export type PopulateEnvOptions = {
+  mode?: 'halt' | 'error' // default is 'error'
+  source?: typeof process.env // default is process.env
+}
+
 export function populateEnv(
   env: Record<string, string | number>,
-  mode?: 'halt',
+  options?: PopulateEnvOptions,
 ) {
+  let source = options?.source || process.env
   let missingNames: string[] = []
   for (let name in env) {
     let defaultValue = env[name]
-    let envValue: string | number | undefined = process.env[name]
+    let envValue: string | number | undefined = source[name]
 
     if (envValue && typeof defaultValue === 'number') {
       envValue = +envValue
@@ -27,7 +33,7 @@ export function populateEnv(
   }
   if (missingNames.length > 0) {
     let error = new EnvError(missingNames)
-    if (mode === 'halt') {
+    if (options?.mode === 'halt') {
       console.error(error.message)
       process.exit(1)
     }

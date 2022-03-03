@@ -33,10 +33,16 @@ populateEnv(env, 'halt') // halt with clear error message
 
 ```typescript
 export default populateEnv
+
 export function populateEnv(
   env: Record<string, string | number>,
-  mode?: 'halt',
+  options?: PopulateEnvOptions,
 ): void
+
+export type PopulateEnvOptions = {
+  mode?: 'halt' | 'error' // default is 'error'
+  source?: typeof process.env // default is process.env
+}
 
 export class EnvError extends Error {
   missingNames: string[]
