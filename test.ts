@@ -1,4 +1,7 @@
-import populateEnv from './index'
+import populateEnv, { saveEnv } from './index'
+import { config } from 'dotenv'
+
+config()
 
 let env = {
   JWT_SECRET: '', // mandatory string variable
@@ -9,3 +12,5 @@ let env = {
 }
 
 populateEnv(env, { mode: 'halt' })
+
+saveEnv({ env })

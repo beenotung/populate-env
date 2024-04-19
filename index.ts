@@ -41,4 +41,44 @@ export function populateEnv(
   }
 }
 
+export function saveEnv(options: {
+  env: object
+  /** @default '.env' */
+  file?: string
+}) {
+  let { readFileSync, writeFileSync } = require('fs')
+  let file = options.file || '.env'
+  let text = ''
+  try {
+    text = readFileSync(file).toString()
+  } catch (error) {
+    // file not found
+  }
+
+  let lines = text
+    .trim()
+    .split('\n')
+    .map(line => line.trim())
+
+  for (let [key, value] of Object.entries(options.env)) {
+    value = String(value)
+    let line = value.includes(' ')
+      ? value.includes('"')
+        ? value.includes("'")
+          ? `${key}=${JSON.stringify(value)}`
+          : `${key}='${value}'`
+        : `${key}="${value}"`
+      : `${key}=${value}`
+    if (!lines.includes(line)) {
+      lines.push(line)
+    }
+  }
+
+  let newText = lines.join('\n') + '\n'
+
+  if (newText != text) {
+    writeFileSync(file, newText)
+  }
+}
+
 export default populateEnv
