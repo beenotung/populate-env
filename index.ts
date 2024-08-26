@@ -61,14 +61,8 @@ export function saveEnv(options: {
     .map(line => line.trim())
 
   for (let [key, value] of Object.entries(options.env)) {
-    value = String(value)
-    let line = value.includes(' ')
-      ? value.includes('"')
-        ? value.includes("'")
-          ? `${key}=${JSON.stringify(value)}`
-          : `${key}='${value}'`
-        : `${key}="${value}"`
-      : `${key}=${value}`
+    value = encodeVaule(value)
+    let line = `${key}=${value}`
     if (!lines.includes(line)) {
       lines.push(line)
     }
@@ -79,6 +73,27 @@ export function saveEnv(options: {
   if (newText != text) {
     writeFileSync(file, newText)
   }
+}
+
+function encodeVaule(value: unknown): string {
+  if (value == undefined) {
+    return ''
+  }
+  if (typeof value !== 'string') {
+    return String(value)
+  }
+  let has_double = value.includes('"')
+  let has_single = value.includes("'")
+  if (has_double && has_single) {
+    return JSON.stringify(value)
+  }
+  if (has_double) {
+    return `'${value}'`
+  }
+  if (has_single) {
+    return `"${value}"`
+  }
+  return value
 }
 
 export default populateEnv
