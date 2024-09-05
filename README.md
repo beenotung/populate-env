@@ -47,6 +47,8 @@ export type PopulateEnvOptions = {
 export class EnvError extends Error {
   missingNames: string[]
 }
+
+export let boolean_values: Record<string, boolean>
 ```
 
 ## License

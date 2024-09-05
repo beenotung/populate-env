@@ -9,23 +9,47 @@ export type PopulateEnvOptions = {
   source?: typeof process.env // default is process.env
 }
 
+export let boolean_values = {
+  on: true,
+  off: false,
+
+  true: true,
+  false: false,
+
+  yes: true,
+  no: false,
+
+  enable: true,
+  disable: false,
+
+  enabled: true,
+  disabled: false,
+}
+
 export function populateEnv(
-  env: Record<string, string | number>,
+  env: Record<string, string | number | boolean>,
   options?: PopulateEnvOptions,
 ) {
   let source = options?.source || process.env
   let missingNames: string[] = []
   for (let name in env) {
     let defaultValue = env[name]
-    let envValue: string | number | undefined = source[name]
+    let envValue: string | number | boolean | undefined = source[name]
 
     if (envValue && typeof defaultValue === 'number') {
       envValue = +envValue
     }
 
-    let value = envValue || defaultValue
+    if (typeof envValue === 'string' && typeof defaultValue === 'boolean') {
+      let key = envValue.toLowerCase() as keyof typeof boolean_values
+      if (key in boolean_values) {
+        envValue = boolean_values[key]
+      }
+    }
 
-    if (!value && value !== 0) {
+    let value = envValue ?? defaultValue
+
+    if (!value && value !== 0 && value !== false) {
       missingNames.push(name)
     } else {
       env[name] = value
@@ -59,6 +83,10 @@ export function saveEnv(options: {
     .trim()
     .split('\n')
     .map(line => line.trim())
+
+  if (lines[0] == '') {
+    lines.splice(0, 1)
+  }
 
   for (let [key, value] of Object.entries(options.env)) {
     value = encodeValue(value)

@@ -25,12 +25,19 @@
     "index.d.ts"
   ],
   "scripts": {
-    "test": "JWT_SECRET=1 SOME_MORE_VAR=2 ts-node test.ts",
+    "test": "npm run clean && npm run mocha && tsc --noEmit",
+    "mocha": "ts-mocha index.test.ts",
+    "clean": "rm -f *.js *.d.ts",
     "build": "tsc -p ."
   },
   "devDependencies": {
+    "@types/chai": "4",
+    "@types/mocha": "^10.0.7",
     "@types/node": "^17.0.21",
+    "chai": "4",
     "dotenv": "^16.4.5",
+    "mocha": "^10.7.3",
+    "ts-mocha": "^10.0.0",
     "ts-node": "^10.5.0",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.5"
