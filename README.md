@@ -49,6 +49,11 @@ export class EnvError extends Error {
 }
 
 /**
+ * @throws {TypeError} if value is not a valid boolean and defaultValue is not provided
+ */
+export function toBoolean(value: string, defaultValue?: boolean): boolean
+
+/**
  * @description you can add custom mapping here.
  * @default on/off, true/false, yes/no, enable/disable, enabled/disabled
  */

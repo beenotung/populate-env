@@ -30,6 +30,20 @@ export let boolean_values: Record<string, boolean> = {
   disabled: false,
 }
 
+/**
+ * @throws {TypeError} if value is not a valid boolean and defaultValue is not provided
+ */
+export function toBoolean(value: string, defaultValue?: boolean): boolean {
+  let key = value.toLowerCase()
+  if (key in boolean_values) {
+    return boolean_values[key]
+  }
+  if (typeof defaultValue == 'boolean') {
+    return defaultValue
+  }
+  throw new TypeError(`Invalid boolean value: ${value}`)
+}
+
 export function populateEnv(
   env: Record<string, string | number | boolean>,
   options?: PopulateEnvOptions,
@@ -45,10 +59,7 @@ export function populateEnv(
     }
 
     if (typeof envValue === 'string' && typeof defaultValue === 'boolean') {
-      let key = envValue.toLowerCase()
-      if (key in boolean_values) {
-        envValue = boolean_values[key]
-      }
+      envValue = toBoolean(envValue)
     }
 
     let value = envValue ?? defaultValue
