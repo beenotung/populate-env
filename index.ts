@@ -9,7 +9,11 @@ export type PopulateEnvOptions = {
   source?: typeof process.env // default is process.env
 }
 
-export let boolean_values = {
+/**
+ * @description you can add custom mapping here.
+ * @default on/off, true/false, yes/no, enable/disable, enabled/disabled
+ */
+export let boolean_values: Record<string, boolean> = {
   on: true,
   off: false,
 
@@ -41,7 +45,7 @@ export function populateEnv(
     }
 
     if (typeof envValue === 'string' && typeof defaultValue === 'boolean') {
-      let key = envValue.toLowerCase() as keyof typeof boolean_values
+      let key = envValue.toLowerCase()
       if (key in boolean_values) {
         envValue = boolean_values[key]
       }

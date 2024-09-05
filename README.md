@@ -48,6 +48,10 @@ export class EnvError extends Error {
   missingNames: string[]
 }
 
+/**
+ * @description you can add custom mapping here.
+ * @default on/off, true/false, yes/no, enable/disable, enabled/disabled
+ */
 export let boolean_values: Record<string, boolean>
 ```
 
