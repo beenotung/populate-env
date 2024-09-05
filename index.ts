@@ -61,7 +61,7 @@ export function saveEnv(options: {
     .map(line => line.trim())
 
   for (let [key, value] of Object.entries(options.env)) {
-    value = encodeVaule(value)
+    value = encodeValue(value)
     let line = `${key}=${value}`
     if (!lines.includes(line)) {
       lines.push(line)
@@ -75,7 +75,7 @@ export function saveEnv(options: {
   }
 }
 
-function encodeVaule(value: unknown): string {
+function encodeValue(value: unknown): string {
   if (value == undefined) {
     return ''
   }
