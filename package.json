@@ -1,6 +1,6 @@
 {
   "name": "populate-env",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Populate a given object from process.env with default value and types.",
   "keywords": [
     "env",
