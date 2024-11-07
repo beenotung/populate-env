@@ -35,6 +35,48 @@ it('should raise error when missing string variable', () => {
   })
 })
 
+describe('string', () => {
+  it('should apply default value when the string value in env is missing', () => {
+    let env = {
+      EMAIL_USER: 'skip',
+      EMAIL_PASSWORD: 'skip',
+    }
+    let source = {
+      EMAIL_PASSWORD: undefined,
+    }
+    populateEnv(env, { mode: 'error', source })
+    expect(env).deep.equals({
+      EMAIL_USER: 'skip',
+      EMAIL_PASSWORD: 'skip',
+    })
+  })
+  it('should apply default value when the string value in env is empty', () => {
+    let env = {
+      EMAIL_USER: 'skip',
+    }
+    let source = {
+      EMAIL_USER: '',
+    }
+    populateEnv(env, { mode: 'error', source })
+    expect(env.EMAIL_USER).to.equal('skip')
+  })
+  it('should apply default value when the string value only contains whitespace', () => {
+    let env = {
+      EMAIL_USER: 'skip',
+      EMAIL_PASSWORD: 'skip',
+    }
+    let source = {
+      EMAIL_USER: ' ',
+      EMAIL_PASSWORD: '\t',
+    }
+    populateEnv(env, { mode: 'error', source })
+    expect(env).deep.equals({
+      EMAIL_USER: 'skip',
+      EMAIL_PASSWORD: 'skip',
+    })
+  })
+})
+
 describe('boolean', () => {
   it('should not overwrite false boolean variable', () => {
     let env = {

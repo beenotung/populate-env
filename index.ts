@@ -62,7 +62,11 @@ export function populateEnv(
       envValue = toBoolean(envValue)
     }
 
-    let value = envValue ?? defaultValue
+    if (typeof envValue === 'string') {
+      envValue = envValue.trim()
+    }
+
+    let value = envValue === '' ? defaultValue : envValue ?? defaultValue
 
     if (!value && value !== 0 && value !== false) {
       missingNames.push(name)
