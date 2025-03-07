@@ -1,5 +1,3 @@
-import { readFileSync, writeFileSync } from 'fs'
-
 export class EnvError extends Error {
   constructor(public missingNames: string[]) {
     super(`Missing ${missingNames.join(', ')} in env`)
@@ -86,7 +84,7 @@ export function populateEnv(
   }
 }
 
-/** save mentioned (subset of) env variables to file */
+/** append subset of env variables to file */
 export function appendEnv<
   T extends object,
   K extends keyof T & string,
@@ -96,19 +94,16 @@ export function appendEnv<
   file?: string
   key: K | K[]
 }) {
-  let env = options.env
-  let file = options.file || '.env'
-  let old_text = readFileSync(file, 'utf-8').trim()
-  let lines: string[] = old_text.split('\n')
+  let { appendFileSync } = require('fs')
+  let { env, file } = options
+  file ||= '.env'
+
+  let lines: string[] = []
+
   function add(key: K) {
     let value = env[key]
     let line = `${key}=${encodeValue(value)}`
-    let index = lines.findIndex(line => line.startsWith(`${key}=`))
-    if (index == -1) {
-      lines.push(line)
-    } else {
-      lines[index] = line
-    }
+    lines.push(line)
   }
   if (Array.isArray(options.key)) {
     for (let key of options.key) {
@@ -117,19 +112,34 @@ export function appendEnv<
   } else {
     add(options.key)
   }
-  let new_text = lines.join('\n')
-  if (new_text != old_text) {
-    writeFileSync(file, new_text + '\n')
-  }
+
+  let text = lines.join('\n')
+
+  appendFileSync(file, '\n' + text + '\n')
 }
 
-/** save entire env to file */
-export function saveEnv(options: {
-  env: object
+/** save entire env (or subset specified by key) to file */
+export function saveEnv<T extends object, K extends keyof T & string>(options: {
+  env: T
   /** @default '.env' */
   file?: string
+  /** @default all keys */
+  key?: K | K[]
 }) {
   let { readFileSync, writeFileSync } = require('fs')
+  let env = options.env
+  if (options.key) {
+    let key = options.key
+    if (Array.isArray(key)) {
+      env = Object.fromEntries(
+        Object.entries(env).filter(([key]) => key.includes(key)),
+      ) as T
+    } else {
+      env = {
+        [key]: env[key],
+      } as T
+    }
+  }
   let file = options.file || '.env'
   let text = ''
   try {
@@ -147,11 +157,18 @@ export function saveEnv(options: {
     lines.splice(0, 1)
   }
 
-  for (let [key, value] of Object.entries(options.env)) {
+  for (let [key, value] of Object.entries(env)) {
     value = encodeValue(value)
     let line = `${key}=${value}`
-    if (!lines.includes(line)) {
+    let index =
+      lines
+        .map((line, index) => ({ line, index }))
+        .reverse()
+        .find(({ line }) => line.startsWith(`${key}=`))?.index ?? -1
+    if (index == -1) {
       lines.push(line)
+    } else {
+      lines[index] = line
     }
   }
 

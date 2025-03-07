@@ -199,7 +199,7 @@ it('should update existing env', () => {
   let file = '.env'
   let env = { SECRET: '456' }
   writeFileSync(file, 'SECRET=123')
-  appendEnv({ env, file, key: 'SECRET' })
+  saveEnv({ env, file, key: 'SECRET' })
   expect(readFileSync(file, 'utf-8').trim()).to.equal('SECRET=456')
 })
 
