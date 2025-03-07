@@ -1,3 +1,5 @@
+import { readFileSync, writeFileSync } from 'fs'
+
 export class EnvError extends Error {
   constructor(public missingNames: string[]) {
     super(`Missing ${missingNames.join(', ')} in env`)
@@ -84,6 +86,44 @@ export function populateEnv(
   }
 }
 
+/** save mentioned (subset of) env variables to file */
+export function appendEnv<
+  T extends object,
+  K extends keyof T & string,
+>(options: {
+  env: T
+  /** @default '.env' */
+  file?: string
+  key: K | K[]
+}) {
+  let env = options.env
+  let file = options.file || '.env'
+  let old_text = readFileSync(file, 'utf-8').trim()
+  let lines: string[] = old_text.split('\n')
+  function add(key: K) {
+    let value = env[key]
+    let line = `${key}=${encodeValue(value)}`
+    let index = lines.findIndex(line => line.startsWith(`${key}=`))
+    if (index == -1) {
+      lines.push(line)
+    } else {
+      lines[index] = line
+    }
+  }
+  if (Array.isArray(options.key)) {
+    for (let key of options.key) {
+      add(key)
+    }
+  } else {
+    add(options.key)
+  }
+  let new_text = lines.join('\n')
+  if (new_text != old_text) {
+    writeFileSync(file, new_text + '\n')
+  }
+}
+
+/** save entire env to file */
 export function saveEnv(options: {
   env: object
   /** @default '.env' */
