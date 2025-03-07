@@ -58,6 +58,24 @@ export function toBoolean(value: string, defaultValue?: boolean): boolean
  * @default on/off, true/false, yes/no, enable/disable, enabled/disabled
  */
 export let boolean_values: Record<string, boolean>
+
+/** save mentioned (subset of) env variables to file */
+export function appendEnv<
+  T extends object,
+  K extends keyof T & string,
+>(options: {
+  env: T
+  /** @default '.env' */
+  file?: string
+  key: K | K[]
+}): void
+
+/** save entire env to file */
+export function saveEnv(options: {
+  env: object
+  /** @default '.env' */
+  file?: string
+}): void
 ```
 
 ## License
