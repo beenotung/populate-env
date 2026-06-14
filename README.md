@@ -42,6 +42,7 @@ export function populateEnv(
 export type PopulateEnvOptions = {
   mode?: 'halt' | 'error' // default is 'error'
   source?: typeof process.env // default is process.env
+  auto_load?: boolean // if true, will resolve the env file using getEnvFile(), and load it into source
 }
 
 export class EnvError extends Error {
