@@ -179,6 +179,23 @@ export function saveEnv<T extends object, K extends keyof T & string>(options: {
   }
 }
 
+/**
+ * resolve env file from `process.env.ENV_FILE` if set or (`.env.{NODE_ENV}` or `.env`  if exists)
+ */
+export function getEnvFile(): string | null {
+  let { existsSync } = require('fs')
+  if (process.env.ENV_FILE) {
+    return process.env.ENV_FILE
+  }
+  if (process.env.NODE_ENV && existsSync('.env.' + process.env.NODE_ENV)) {
+    return '.env.' + process.env.NODE_ENV
+  }
+  if (existsSync('.env')) {
+    return '.env'
+  }
+  return null
+}
+
 function encodeValue(value: unknown): string {
   if (value == undefined) {
     return ''

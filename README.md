@@ -76,6 +76,9 @@ export function saveEnv(options: {
   /** @default '.env' */
   file?: string
 }): void
+
+/** resolve env file from `process.env.ENV_FILE` if set or (`.env.{NODE_ENV}` or `.env`  if exists) */
+export function getEnvFile(): string | null
 ```
 
 ## License
