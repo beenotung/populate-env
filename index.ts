@@ -55,8 +55,10 @@ export function populateEnv(
     if (source !== process.env) {
       throw new Error('auto_load will override values in process.env')
     }
-    let { loadEnvFile } = require('process')
-    loadEnvFile(file)
+    if (file) {
+      let { loadEnvFile } = require('process')
+      loadEnvFile(file)
+    }
   }
   let missingNames: string[] = []
   for (let name in env) {
