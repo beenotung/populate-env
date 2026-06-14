@@ -77,7 +77,13 @@ export function saveEnv(options: {
   file?: string
 }): void
 
-/** resolve env file from `process.env.ENV_FILE` if set or (`.env.{NODE_ENV}` or `.env`  if exists) */
+/**
+ * Resolve env file from `process.env.ENV_FILE` if set.
+ * Otherwise return the first existing file among `.env.{mode}`, `.{mode}.env`, `{mode}.env`
+ * for the mode (use `process.env.NODE_ENV` if set, or `development` then `dev` then `local` when unset).
+ * Finally return `.env` if it exists.
+ * If no file is found, return null.
+ */
 export function getEnvFile(): string | null
 ```
 

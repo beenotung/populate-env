@@ -180,18 +180,35 @@ export function saveEnv<T extends object, K extends keyof T & string>(options: {
 }
 
 /**
- * resolve env file from `process.env.ENV_FILE` if set or (`.env.{NODE_ENV}` or `.env`  if exists)
+ * Resolve env file from `process.env.ENV_FILE` if set.
+ * Otherwise return the first existing file among `.env.{mode}`, `.{mode}.env`, `{mode}.env`
+ * for the mode (use `process.env.NODE_ENV` if set, or `development` then `dev` then `local` when unset).
+ * Finally return `.env` if it exists.
+ * If no file is found, return null.
  */
 export function getEnvFile(): string | null {
   let { existsSync } = require('fs')
   if (process.env.ENV_FILE) {
     return process.env.ENV_FILE
   }
-  if (process.env.NODE_ENV && existsSync('.env.' + process.env.NODE_ENV)) {
-    return '.env.' + process.env.NODE_ENV
+  let files: string[] = []
+  function addModeFiles(mode: string) {
+    files.push('.env.' + mode)
+    files.push('.' + mode + '.env')
+    files.push(mode + '.env')
   }
-  if (existsSync('.env')) {
-    return '.env'
+  if (process.env.NODE_ENV) {
+    addModeFiles(process.env.NODE_ENV)
+  } else {
+    addModeFiles('development')
+    addModeFiles('dev')
+    addModeFiles('local')
+  }
+  files.push('.env')
+  for (let file of files) {
+    if (existsSync(file)) {
+      return file
+    }
   }
   return null
 }
